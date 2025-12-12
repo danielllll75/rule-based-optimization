@@ -103,6 +103,10 @@ The notebook produces:
   - Portable battery container
   - Heavy machinery
 - Estimated total daily energy demand considering real-world conditions
+- Below is an example of the charging station selection process.  
+The system filters all available stations and selects the top 5 cheapest options based on the defined cost function.
+
+![Charging station optimization map](Pics/optimization_map.png)
 
 ## How to Run
 
@@ -143,6 +147,9 @@ notebooks/charging_station_selection.ipynb
 - The model could save almost **124 hours in a year**
 - The model also could save **€9,920**
 - The rule-based approach proved reliable for real-world scenarios
+- The rule-based system significantly reduces decision-making time and operational cost compared to manual calculations.
+
+![Time and cost savings](Pics/key_results.png)
 
 ## Limitations
 
