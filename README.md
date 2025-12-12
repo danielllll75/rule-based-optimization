@@ -57,6 +57,16 @@ Given user inputs (machine, portable battery, SOC, location, etc.), the notebook
 
 ---
 
+## Requirements
+
+- Python 3.9 or higher
+- pandas
+- openpyxl
+- geopy
+- plotly
+- jupyter
+
+
 ## Repository Structure
 
 ```txt
