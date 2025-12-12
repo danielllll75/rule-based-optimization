@@ -156,10 +156,9 @@ This project was developed as part of a Master's thesis in Smart Systems Enginee
 ## Author
 
 Daniel Amirahmadi  
-MSc Smart Systems Engineering (AI & Data Engineering) 
+MSc Smart Systems Engineering (AI & Data Engineering), 
 Hanze University of Applied Sciences
-📧 Email: your.email@example.com  
-🔗 LinkedIn: https://linkedin.com/in/yourprofile
 
-
+Email: danielamirahmadi@gmail.com
+LinkedIn: [www.linkedin.com/in/daniel-amirahmadi]
 
