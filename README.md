@@ -77,6 +77,9 @@ Given user inputs (machine, portable battery, SOC, location, etc.), the notebook
 │  ├─ Heavy_machinery_dataset.xlsx
 │  ├─ Portable_battery_dataset.xlsx
 │  └─ EV_stations_dataset.xlsx
+├─ Pics/
+│  ├─ optimization_map.png
+│  └─ key_results.png
 ├─ requirements.txt
 └─ README.md
 ```
