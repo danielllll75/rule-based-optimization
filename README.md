@@ -1,54 +1,165 @@
-# Rule-Based Charging Station Optimization
+# Charging Station Selection for Electric Heavy Machinery (Rule-Based)
 
-Overview
+A Python rule-based decision system that filters and ranks EV charging stations for electric heavy machinery and portable battery containers using **distance**, **availability**, and **total cost**. The project also estimates **charging time** and considers real-world factors such as **temperature impact**, **usable capacity limitations**,  **extra power consumptions** and **heavy working cycles**.
 
-This repository contains a Python-based rule-based algorithm designed to optimize charging station selection for heavy machinery and portable batteries. The system ranks charging stations based on multiple factors such as cost, distance, and availability, ensuring efficient energy management in real-world scenarios.
+---
 
-## Key Features
+## Problem
 
-Loads Three Datasets: The code loads datasets related to heavy machinery, battery containers, and charging stations.
+Selecting a charging station in real-world construction scenarios is not only about the cheapest kWh price. You also need to consider:
+- How far the station is from the site
+- Whether it is available
+- How much energy is required based on state-of-charge (SOC)
+- Charging limits (battery input/output power, vehicle charging speed)
+- Extra energy needs due to cold temperature, standby loads, and heavy working periods
+- Usable battery capacity is limited to less than 100% of nominal capacity
 
-Machine and Battery Selection: Users can select a specific heavy machine and a compatible portable battery.
+Manual selection can be time-consuming and inconsistent when many stations exist.
 
-Charging Station Filtering: The system filters available charging stations based on predefined criteria.
+---
 
-Rule-Based Optimization: A rule-based approach ranks the top five charging stations based on cost, availability, and distance.
+## What this project does
 
-Charging Time Calculation: The estimated charging time for the selected machine and battery is computed.
+Given user inputs (machine, portable battery, SOC, location, etc.), the notebook:
 
-Scenario Analysis: The system evaluates real-world scenarios to validate optimization results.
+1. Loads datasets:
+   - Heavy machinery specs (battery capacity, charging speed, power)
+   - Portable battery container specs (capacity, power input/output)
+   - EV charging station dataset (location, availability, cost per kWh, station capacity)
 
-Energy Demand Calculation: Computes normal and extra energy demand, along with total energy consumption.
+2. Computes the site-to-station distance using geodesic coordinates
 
-How It Works
+3. Filters stations by:
+   - **Distance ≤ 5 km**
+   - **Availability > 0**
 
-Load the Datasets: The script imports relevant datasets containing details about heavy machinery, batteries, and charging stations.
+4. Calculates required charging energy from SOC:
+   - Usable capacity is assumed **90%** of nominal for longevity
+   - `Required_energy = Usable_capacity - current_energy`
 
-User Input: The user selects a heavy machine and an associated battery from the dataset.
+5. Ranks stations using a total cost function:
+   - `Total Cost = (Required_energy * Cost_per_Unit) + (t * Distance)`
+   - Where `t` is a distance penalty weight ($/km)
 
-Filter Charging Stations: The system filters stations based on availability, location, and energy requirements.
+6. Returns the **Top 5 cheapest stations** and visualizes:
+   - All accepted stations on a map
+   - Top 5 stations on a map
 
-Apply Rule-Based Optimization: The algorithm ranks the best charging stations based on cost-effectiveness and operational efficiency.
+7. Estimates charging time for:
+   - Portable battery container charging time
+   - Heavy machine charging time (limited by min(vehicle charging speed, battery power output))
 
-Rank Top 5 Charging Stations: The most optimal charging stations are presented in a ranked list.
+8. Adds real-world scenario adjustments:
+   - Temperature-based extra energy demand
+   - Limitation of total usable battery capacity
+   - Standby consumption (cooling/heating + electronics + startup)
+   - Heavy vs normal working energy split
 
-Charging Time Calculation: The estimated time required to charge both the machine and the battery is computed.
+---
 
-Scenario Analysis: The system examines real-world applications to validate results.
+## Repository Structure
 
-Energy Demand Calculation: The total energy consumption for normal and extra demand scenarios is calculated.
+```txt
+.
+├─ notebooks/
+│  └─ charging_station_selection.ipynb
+├─ data/
+│  ├─ Heavy_machinery_dataset.xlsx
+│  ├─ Portable_battery_dataset.xlsx
+│  └─ EV_stations_dataset.xlsx
+├─ requirements.txt
+└─ README.md
+```
 
-Output Results: The optimized selection and relevant data are displayed for the user.
+## Inputs
 
-Contributions
+### User Inputs (during runtime)
+The user is prompted to enter:
+- Machine number (row index from the heavy machinery dataset)
+- Battery number (row index from the portable battery dataset)
+- Battery state of charge (SOC) in percentage (%)
+- Machine state of charge (SOC) in percentage (%)
+- Ambient temperature in °C
 
-Contributions and improvements are welcome! Feel free to fork the repository and submit pull requests.
+## Outputs
 
-License
+The notebook produces:
+- A filtered table of charging stations that satisfy distance and availability conditions
+- A ranked table of the top 5 cheapest charging stations
+- Interactive maps showing:
+  - All accepted stations and the reference site
+  - The top 5 cheapest stations and the reference site
+- Estimated charging time for:
+  - Portable battery container
+  - Heavy machinery
+- Estimated total daily energy demand considering real-world conditions
 
-This project is licensed under the MIT License. See LICENSE for details.
+## How to Run
 
-Contact
+1. Clone the repository:
+```bash
+git clone https://github.com/danielllll75/rule-based-optimization.git
+```
+2. Navigate to the project folder:
+```bash
+cd <rule-based-optimization>
+```
+3. Install required packages:
+```bash
+pip install -r requirements.txt
+```
+4. Start Jupyter Notebook:
+```bash
+jupyter notebook
+```
+5. Open the notebook and run all cells:
+```bash
+notebooks/charging_station_selection.ipynb
+```
+## Notes & Assumptions
 
-For questions or collaborations, feel free to reach out via GitHub or email.
-danielamirahmadi@gmail.com
+- Only 90% of nominal battery capacity is considered usable to account for battery longevity
+- Charging stations are filtered using:
+  - Maximum distance: 5 km
+  - Availability > 0
+- A distance penalty factor of 100 $/km is applied in the total cost calculation
+- Charging speed is limited by the minimum of vehicle charging speed and battery power output
+- Temperature-based energy losses are estimated using simplified rule-based logic suitable for the Netherlands climate
+
+## Key Results
+
+- The system consistently selected the same optimal charging station as manual calculations
+- Decision time was reduced from **15 minutes to 10 seconds**
+- The model could save almost **124 hours in a year**
+- The model also could save **€9,920**
+- The rule-based approach proved reliable for real-world scenarios
+
+## Limitations
+
+- Fixed rule weights are used instead of adaptive optimization
+- No real-time data (grid congestion, queue length, dynamic pricing)
+- The construction site reference point is currently hard-coded
+- Assumes simplified thermal and standby consumption models
+
+## Future Work
+
+- Add real-time data sources for station availability and pricing
+- Replace fixed rules with machine learning–based ranking models
+- Introduce multi-objective optimization (cost, time, reliability)
+- Externalize parameters using configuration files
+- Deploy the logic as a backend service or dashboard
+
+## Project Context
+
+This project was developed as part of a Master's thesis in Smart Systems Engineering (AI & Automation) in collaboration with an industry partner in the construction sector.
+
+## Author
+
+Daniel Amirahmadi  
+MSc Smart Systems Engineering (AI & Data Engineering) 
+Hanze University of Applied Sciences
+📧 Email: your.email@example.com  
+🔗 LinkedIn: https://linkedin.com/in/yourprofile
+
+
+
