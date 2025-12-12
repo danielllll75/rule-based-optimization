@@ -1,10 +1,10 @@
-Rule-Based Charging Station Optimization
+# Rule-Based Charging Station Optimization
 
 Overview
 
 This repository contains a Python-based rule-based algorithm designed to optimize charging station selection for heavy machinery and portable batteries. The system ranks charging stations based on multiple factors such as cost, distance, and availability, ensuring efficient energy management in real-world scenarios.
 
-Key Features
+## Key Features
 
 Loads Three Datasets: The code loads datasets related to heavy machinery, battery containers, and charging stations.
 
