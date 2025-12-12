@@ -151,7 +151,7 @@ notebooks/charging_station_selection.ipynb
 
 ## Project Context
 
-This project was developed as part of a Master's thesis in Smart Systems Engineering (AI & Automation) in collaboration with an industry partner in the construction sector.
+This project was developed as part of a Master's thesis in Smart Systems Engineering (AI & Data Engineering) in collaboration with an industry partner in the construction sector.
 
 ## Author
 
